@@ -8,5 +8,8 @@ main.o: main.c
 
 board.o: board.c board.h
 	$(CC) $(CLFAGS) -c board.c
+
+tetris: main.o board.o
+
 clean:
 	rm -rf *~ *.o 

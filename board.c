@@ -20,11 +20,13 @@ inline bRow* createBRow()
 board *createBoard()
 {
     board *output = malloc(sizeof(board));
-    board->bottom = createBRow();
-    bRow *prev = board->bottom;
+    output->bottom = createBRow();
+    bRow *prev = output->bottom;
     
     bRow *new;
-    for(int i = 0; i < B_HEIGHT - 1; i++)
+
+    int i;
+    for(i = 0; i < B_HEIGHT - 1; i++)
     {
         new = createBRow();
         prev->next = new;
@@ -47,10 +49,8 @@ inline bRow *getBrow(board *board, int rowN)
 }
 
 // Remove row, Responsibility of calling function to put new rows at top
-void removeRow(bRow *row);
+void removeRow(bRow *row)
 {
-    bRow* row = getBRow(board, rowN);
-
     row->prev->next = row->next;
     row->next->prev = row->prev;
 
@@ -60,7 +60,8 @@ void removeRow(bRow *row);
 // Returns true if the row is full, else false
 bool rowFull(bRow* row)
 {
-    for(int i = 0; i < B_WIDTH; i++)
+    int i;
+    for(i = 0; i < B_WIDTH; i++)
         if(!row->blocks[i])
             return false;
 
@@ -69,7 +70,7 @@ bool rowFull(bRow* row)
 
 // Removes empty rows from the board
 // Returns the number of rows removed
-void removeEmptyRows(board* board)
+int removeEmptyRows(board* board)
 {
     int removed = 0;
     bRow *next, *row = board->bottom;
@@ -84,7 +85,8 @@ void removeEmptyRows(board* board)
         row = next;
     }
     
-    for(int i = 0; i < removed; i++)
+    int i;
+    for(i = 0; i < removed; i++)
     {
         bRow *new = createBRow();
         board->top->next = new;
