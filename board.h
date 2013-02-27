@@ -33,6 +33,7 @@ typedef struct board
 
 bRow *createBRow();
 board *createBoard();
+void freeBoard(board *board);
 bRow *getBrow(board *board, int rowN);
 void removeRow(bRow *row);
 bool rowFull(bRow *row);

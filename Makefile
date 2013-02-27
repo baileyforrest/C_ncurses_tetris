@@ -3,13 +3,19 @@ CFLAGS = -Wall -lncurses
 
 all: tetris
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c main.c
+tetris.o: tetris.c tetris.h
+	$(CC) $(CFLAGS) -c tetris.c
 
 board.o: board.c board.h
 	$(CC) $(CLFAGS) -c board.c
 
-tetris: main.o board.o
+piece.o: piece.c piece.h
+	$(CC) $(CFLAGS) -c piece.c
+
+interface.o: interface.c interface.h
+	$(CC) $(CFLAGS) -c interface.c
+
+tetris: tetris.o board.o piece.o interface.o
 
 clean:
 	rm -rf *~ *.o 

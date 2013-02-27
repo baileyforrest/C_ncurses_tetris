@@ -38,6 +38,19 @@ board *createBoard()
     return output;
 }
 
+void freeBoard(board *board)
+{
+    bRow *p = board->top, *next;;
+    while(p != NULL)
+    {
+        next = p->next;
+        free(p);
+        p = next;
+    }
+
+    free(board);
+}
+
 // Gets row number from board
 inline bRow *getBrow(board *board, int rowN)
 {
