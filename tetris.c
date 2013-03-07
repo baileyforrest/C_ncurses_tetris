@@ -8,9 +8,6 @@
  *
  */
 
-#include <time.h>
-#include "board.h"
-#include "interface.h"
 #include "tetris.h"
 
 static board *mainBoard = NULL;
@@ -43,6 +40,9 @@ int initGame()
     
     if((mainBoard = createBoard()) == NULL)
         return -1;
+
+    // seed random number generator
+    srand(time(NULL));
 
     return 0;
 }

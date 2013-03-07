@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -lncurses -Werror
+CFLAGS = -Wall -lncurses
 
 all: tetris
 

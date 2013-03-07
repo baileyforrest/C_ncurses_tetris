@@ -13,10 +13,12 @@
 #include <stdbool.h>
 #include <string.h>
 #include <strings.h>
+#include <stdlib.h>
 #include "board.h"
 
 #define PHEIGHT 4
 #define NUM_DIR 4
+#define NUM_PIECES 7
 //#define FALL 0x8
 //#define NOT_FALL 0x7
 
@@ -35,7 +37,7 @@ typedef struct piece
     int x; // Coordinates of the upper left of the piece
     int y;
 
-    block blocks[4][4]; // 4x4 grid of blocks
+    block blocks[PHEIGHT][PHEIGHT]; // 4x4 grid of blocks
     pieceType t;
     bRow* cRow; // Points to lowest row piece is in
 } piece;

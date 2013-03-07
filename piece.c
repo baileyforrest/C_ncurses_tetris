@@ -168,43 +168,60 @@ void initJ(piece *p)
 {
     int i;
     for(i = 0; i < 3; i++)
-        p->blocks[PHEIGHT / 2][i] = (block)I;
-    p->blocks[PHEIGHT / 2 + 1][2] = (block)J;
+        p->blocks[PHEIGHT / 2 - 1][i] = (block)J;
+    p->blocks[PHEIGHT / 2][2] = (block)J;
 }
 
 // Initializes piece with L pattern
 // Assumes 2d array currently clear
 void initL(piece *p)
 {
-
+    int i;
+    for(i = 0; i < 3; i++)
+        p->blocks[PHEIGHT / 2 - 1][i] = (block)L;
+    p->blocks[PHEIGHT / 2][1] = (block)L;
 }
 
 // Initializes piece with O pattern
 // Assumes 2d array currently clear
 void initO(piece *p)
 {
-
+    int i, j;
+    for(i = PHEIGHT / 2 - 1; i < PHEIGHT / 2 + 1; i++)
+        for(j = PHEIGHT / 2 - 1; j < PHEIGHT / 2 + 1; j++)
+            p->blocks[i][j] = (block)O;
 }
 
 // Initializes piece with S pattern
 // Assumes 2d array currently clear
 void initS(piece *p)
 {
-
+    int i;
+    for(i = 1; i < PHEIGHT / 2; i++)
+        p->blocks[0][i] = (block)S;
+    for(i = 0; i < PHEIGHT / 2; i++)
+        p->blocks[1][i] = (block)S;    
 }
 
 // Initializes piece with T pattern
 // Assumes 2d array currently clear
 void initT(piece *p)
 {
-
+    int i;
+    for(i = 0; i < 3; i++)
+        p->blocks[1][i] = (block)T;
+    p->blocks[0][1] = (block)T;
 }
 
 // Initializes piece with Z pattern
 // Assumes 2d array currently clear
 void initZ(piece *p)
 {
-
+    int i;
+    for(i = 0; i < PHEIGHT / 2; i++)
+        p->blocks[0][i] = (block)Z;
+    for(i = 1; i < PHEIGHT / 2; i++)
+        p->blocks[1][i] = (block)Z;
 }
 
 
@@ -234,10 +251,16 @@ piece *newPiece(pieceType t, board *b)
     case Z: initZ(p); break;
     }
 
+    // rotate the piece a random number of times
+    int rotates = rand() % NUM_DIR;
 
-    
-
-    
+    while(rotates--)
+        rotatePiece(p);
 
     return p;
+}
+
+void freePiece(piece *p)
+{
+    free(p);
 }
