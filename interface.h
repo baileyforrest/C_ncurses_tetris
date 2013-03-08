@@ -21,7 +21,9 @@ typedef enum { MOVE_DOWN,
                MOVE_LEFT,
                MOVE_RIGHT,
                FLIP,
-               DROP
+               DROP,
+               NONE,
+               QUIT
 } moveCommand;
 
 int initInter();
@@ -29,8 +31,8 @@ void closeInter();
 moveCommand getInput();
 void displayBoard(board *mainBoard, piece *fallingPiece, piece *nextPiece);
 void displayStats(int score, int lines);
-void dispBlock(int x, int y, block b);
-void displayPiece(int initx, int inity, piece *p);
+void dispBlock(int x, int y, block b, WINDOW *win);
+void displayPiece(int initx, int inity, piece *p, WINDOW *win, bool ovr);
 void displayFallingPiece(piece *fallingPiece);
 void displayNextPiece(piece *nextPiece);
 

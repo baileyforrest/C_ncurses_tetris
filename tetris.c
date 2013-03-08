@@ -75,10 +75,10 @@ int runGame()
 
     for(;;)
     {
-        handleInput(getInput());
+        if(handleInput(getInput()))
+            return 1;
         displayBoard(mainBoard, fallingPiece, nextPiece);
         displayStats(score, lines);
-        printf("got here\n");
     }
     
     return 0;
@@ -105,7 +105,7 @@ bool moveDown(piece *p)
     return true;
 }
 
-void handleInput(moveCommand c)
+int handleInput(moveCommand c)
 {
     switch(c)
     {
@@ -114,7 +114,11 @@ void handleInput(moveCommand c)
     case MOVE_DOWN: moveDown(fallingPiece); break;
     case FLIP: rotatePiece(fallingPiece); break;
     case DROP: dropPiece(fallingPiece); break;
+    case NONE: break;
+    case QUIT: return 1; break;
     }
+
+    return 0;
 }
 
 // Get the next piece

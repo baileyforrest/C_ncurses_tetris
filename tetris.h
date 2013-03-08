@@ -19,7 +19,7 @@ int initGame();
 int runGame();
 void dropPiece(piece *p);
 bool moveDown(piece *p);
-void handleInput(moveCommand);
+int handleInput(moveCommand c);
 void getNextPiece();
 void cleanUp();
 

@@ -9,17 +9,21 @@
 
 #include "piece.h"
 #include "board.h"
+#include <stdio.h>
 
 // place a piece on the board
 void setPiece(piece *p)
 {
     int i, row;
+    block b;
     bRow *r = p->cRow;
     for(row = 0; row < PHEIGHT; row++)
     {
         for(i = 0; i < PHEIGHT; i++)
         {
-            r->blocks[p->x + i] = p->blocks[PHEIGHT - 1 - row][i];
+            b = p->blocks[PHEIGHT - 1 - row][i];
+            if(b)
+                r->blocks[p->x + i] = b;
         }
 
         r = r->next;
@@ -40,7 +44,7 @@ bool validLocation(piece *p)
             {
                 // Check if block out of bounds
                 if((p->y + row < 0) || (p->x + col < 0) ||
-                   (p->x + col > B_HEIGHT))
+                   (p->x + col >= B_WIDTH))
                     return false;
 
                 // Check if there is an overlapping block
@@ -61,6 +65,8 @@ bool movePiece(piece *p, int dir)
     // Moving down
     if(!dir)
     {
+        if(!p->cRow->prev) // Reached the bottom
+            return false;
         p->y++;
         p->cRow = p->cRow->prev;
     }
@@ -82,7 +88,7 @@ bool movePiece(piece *p, int dir)
     return false;
 }
 
-void swap(block *b1, block *b2)
+inline void swap(block *b1, block *b2)
 {
     block t;
     t = *b1;
@@ -94,7 +100,8 @@ void swap(block *b1, block *b2)
 void trans(block blocks[PHEIGHT][PHEIGHT])
 {
     int i, j;
-    for(i = 0; i < PHEIGHT - 2; i++)
+
+    for(i = 0; i < PHEIGHT - 1; i++)
     {
         for(j = i + 1; j < PHEIGHT; j++)
         {

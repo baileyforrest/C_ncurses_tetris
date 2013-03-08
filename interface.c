@@ -36,12 +36,15 @@ int initInter()
     init_pair(CYAN, COLOR_CYAN, COLOR_BLACK);
     init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
     
-    tetris_win = newwin(B_HEIGHT - B_HIDDEN + 2, B_WIDTH + 2, starty, startx);
+    tetris_win = newwin(B_HEIGHT - B_HIDDEN + 2, B_WIDTH + 2,
+                        starty, startx);
     keypad(tetris_win, TRUE);
+    box(tetris_win, 0, 0);
+    keypad(stdscr, TRUE);
+    wrefresh(tetris_win);
     mvprintw(0, 0, "Tetris! Left/Right/Down arrow keys to move, Up to flip. "
              "Space bar to hard drop");
-    
-    
+
     return 0;
 }
 
@@ -66,29 +69,32 @@ moveCommand getInput()
     case KEY_UP: return FLIP; break;
     case KEY_DOWN: return MOVE_DOWN; break;
     case ' ': return DROP; break;
+    case KEY_F(1): return QUIT; break;
     }
 
-    // Should not get here
-    return FLIP;
+    return NONE;
 }
 
 void displayBoard(board *mainBoard, piece *fallingPiece, piece *nextPiece)
 {
     bRow *r;
-
     int x, y = 0;
-    for(r = mainBoard->bottom; r != NULL; r = r->next)
+    for(r = mainBoard->top; r != NULL; r = r->prev, y++)
     {
+        //printf("%d %d\n", x, y);
+        if(y < 2)
+            continue;
+
         for(x = 0; x < B_WIDTH; x++)
         {
-            dispBlock(startx + x, starty + y, r->blocks[x]);
+            dispBlock(x, y, r->blocks[x], tetris_win);
         }
-
-        y++;
     }
 
     displayFallingPiece(fallingPiece);
     displayNextPiece(nextPiece);
+
+    wrefresh(tetris_win);
     refresh();
 }
 
@@ -97,8 +103,16 @@ void displayStats(int score, int lines)
     mvprintw(starty - 1, startx, "Score: %d, Lines: %d", score, lines);
 }
 
-void dispBlock(int x, int y, block b)
+void dispBlock(int x, int y, block b, WINDOW *win)
 {
+    // clear empty blocks
+    if(!b)
+    {
+        //mvaddch(y, x, ' ');
+        mvwaddch(win, y, x, ' ');
+        return;
+    }
+
     int color;
     switch((pieceType)b)
     {
@@ -109,32 +123,36 @@ void dispBlock(int x, int y, block b)
     case S: color = MAGENTA; break;
     case T: color = CYAN; break;
     case Z: color = WHITE; break;
+    default: break;
     }
 
-    attron(COLOR_PAIR(color));
-    mvaddch(x, y, BLOCK);
-    attroff(COLOR_PAIR(color));
+    wattron(win, COLOR_PAIR(color));
+    mvwaddch(win, y, x, BLOCK);
+    wattroff(win, COLOR_PAIR(color));
     
 }
 
-inline void displayPiece(int initx, int inity, piece *p)
+inline void displayPiece(int initx, int inity, piece *p, WINDOW *win,
+                         bool ovr)
 {
     int xOff, yOff;
+    block b;
     for(yOff = 0; yOff < PHEIGHT; yOff++)
         for(xOff = 0; xOff < PHEIGHT; xOff++)
         {
-            dispBlock(initx + xOff, inity + yOff,
-                      p->blocks[yOff][xOff]);
+            b = p->blocks[yOff][xOff];
+            if(ovr || b)
+                dispBlock(initx + xOff, inity + yOff, b, win);
         }
 }
 
 void displayFallingPiece(piece *fallingPiece)
 {
-    int blockx = startx + fallingPiece->x;
-    int blocky = starty + fallingPiece->y;
+    int blockx = fallingPiece->x;
+    int blocky = fallingPiece->y;
 
-
-    displayPiece(blockx, blocky, fallingPiece);
+    if(blocky > PHEIGHT / 2)
+        displayPiece(blockx, blocky, fallingPiece, tetris_win, false);
 }
 
 void displayNextPiece(piece *nextPiece)
@@ -144,5 +162,5 @@ void displayNextPiece(piece *nextPiece)
 
     mvprintw(nexty, nextx, "Next:");
     
-    displayPiece(nextx, nexty + 1, nextPiece);
+    displayPiece(nextx, nexty + 1, nextPiece, stdscr, true);
 }
