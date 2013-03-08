@@ -11,8 +11,10 @@
 #include "tetris.h"
 
 static board *mainBoard = NULL;
+static piece *fallingPiece = NULL;
+static piece *nextPiece = NULL;
 static int score;
-static int level;
+static int lines;
 
 int main()
 {
@@ -21,16 +23,17 @@ int main()
         if(initGame() < 0)
             exit(1);
 
-        dispMenu();
         if(runGame()) break;
     }
+
+    cleanUp();
     return 0;
 }
 
 int initGame()
 {
     score = 0;
-    level = 0;
+    lines = 0;
 
     if(mainBoard != NULL)
         freeBoard(mainBoard);
@@ -40,6 +43,12 @@ int initGame()
     
     if((mainBoard = createBoard()) == NULL)
         return -1;
+
+    if(fallingPiece == NULL)
+        fallingPiece = newPiece(mainBoard);
+    
+    if(nextPiece == NULL)
+        nextPiece = newPiece(mainBoard);
 
     // seed random number generator
     srand(time(NULL));
@@ -62,17 +71,61 @@ int delayMili(int delay)
 
 int runGame()
 {
-    int delay = 250;
+    //int delay = 250;
 
     for(;;)
     {
-
+        handleInput(getInput());
+        displayBoard(mainBoard, fallingPiece, nextPiece);
+        displayStats(score, lines);
+        printf("got here\n");
     }
-    
     
     return 0;
 }
 
-void dispMenu()
+inline void dropPiece(piece *p)
 {
+    while(moveDown(p));
+}
+
+// Tries to move a piece down, if it can't place it, get new piece
+// returns true if piece placed sucessfully
+bool moveDown(piece *p)
+{
+    if(!movePiece(fallingPiece, DOWN))
+    {
+        setPiece(fallingPiece);
+        freePiece(fallingPiece);
+        lines += removeEmptyRows(mainBoard);
+        getNextPiece();
+        return false;
+    }
+
+    return true;
+}
+
+void handleInput(moveCommand c)
+{
+    switch(c)
+    {
+    case MOVE_LEFT: movePiece(fallingPiece, LEFT); break;
+    case MOVE_RIGHT: movePiece(fallingPiece, RIGHT); break;
+    case MOVE_DOWN: moveDown(fallingPiece); break;
+    case FLIP: rotatePiece(fallingPiece); break;
+    case DROP: dropPiece(fallingPiece); break;
+    }
+}
+
+// Get the next piece
+inline void getNextPiece()
+{
+    fallingPiece = nextPiece;
+    nextPiece = newPiece(mainBoard);
+}
+
+void cleanUp()
+{
+    closeInter();
+    freeBoard(mainBoard);
 }

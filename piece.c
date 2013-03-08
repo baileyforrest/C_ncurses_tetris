@@ -226,8 +226,11 @@ void initZ(piece *p)
 
 
 // Creates new piece of specified type
-piece *newPiece(pieceType t, board *b)
+piece *newPiece(board *b)
 {
+    pieceType t;
+    t = rand() % NUM_PIECES + 1; // Generate random piece type
+    
     piece* p = calloc(1, sizeof(piece));
     p->y = 0;
     p->x = B_WIDTH / 2 - PHEIGHT / 2;

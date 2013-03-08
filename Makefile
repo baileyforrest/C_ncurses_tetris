@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -lncurses
+CFLAGS = -Wall
+LIBS = -lncurses
 
 all: tetris
 
@@ -15,7 +16,7 @@ piece.o: piece.c piece.h
 interface.o: interface.c interface.h
 	$(CC) $(CFLAGS) -c interface.c
 
-tetris: tetris.o board.o piece.o interface.o
+tetris: tetris.o board.o piece.o interface.o $(LIBS)
 
 clean:
 	rm -rf *~ *.o 

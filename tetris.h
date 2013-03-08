@@ -11,12 +11,16 @@
 
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "board.h"
 #include "interface.h"
 
 int initGame();
-void dispMenu();
 int runGame();
-
+void dropPiece(piece *p);
+bool moveDown(piece *p);
+void handleInput(moveCommand);
+void getNextPiece();
+void cleanUp();
 
 #endif

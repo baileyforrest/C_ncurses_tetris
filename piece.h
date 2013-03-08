@@ -19,8 +19,18 @@
 #define PHEIGHT 4
 #define NUM_DIR 4
 #define NUM_PIECES 7
-//#define FALL 0x8
-//#define NOT_FALL 0x7
+#define LEFT -1
+#define DOWN 0
+#define RIGHT 1
+
+#define RED 1
+#define GREEN 2
+#define YELLOW 3
+#define BLUE 4
+#define MAGENTA 5
+#define CYAN 6
+#define WHITE 7
+
 
 typedef enum { I = 1,
                J = 2,
@@ -58,7 +68,7 @@ void initS(piece *p);
 void initT(piece *p);
 void initZ(piece *p);
 
-piece* newPiece(pieceType t, board *b);
+piece* newPiece(board *b);
 void freePiece(piece *p);
 
 
