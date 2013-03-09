@@ -40,7 +40,7 @@ bool validLocation(piece *p)
         for(col = 0; col < PHEIGHT; col++)
         {
             // If there's a block here
-            if(p->blocks[row][col])
+            if(p->blocks[PHEIGHT - row - 1][col])
             {
                 // Check if block out of bounds
                 if((p->y + row < 0) || (p->x + col < 0) ||
@@ -186,7 +186,7 @@ void initL(piece *p)
     int i;
     for(i = 0; i < 3; i++)
         p->blocks[PHEIGHT / 2 - 1][i] = (block)L;
-    p->blocks[PHEIGHT / 2][1] = (block)L;
+    p->blocks[0][2] = (block)L;
 }
 
 // Initializes piece with O pattern
@@ -204,7 +204,7 @@ void initO(piece *p)
 void initS(piece *p)
 {
     int i;
-    for(i = 1; i < PHEIGHT / 2; i++)
+    for(i = 1; i < PHEIGHT / 2 + 1; i++)
         p->blocks[0][i] = (block)S;
     for(i = 0; i < PHEIGHT / 2; i++)
         p->blocks[1][i] = (block)S;    
@@ -227,7 +227,7 @@ void initZ(piece *p)
     int i;
     for(i = 0; i < PHEIGHT / 2; i++)
         p->blocks[0][i] = (block)Z;
-    for(i = 1; i < PHEIGHT / 2; i++)
+    for(i = 1; i < PHEIGHT / 2 + 1; i++)
         p->blocks[1][i] = (block)Z;
 }
 

@@ -123,7 +123,7 @@ void dispBlock(int x, int y, block b, WINDOW *win)
     case S: color = MAGENTA; break;
     case T: color = CYAN; break;
     case Z: color = WHITE; break;
-    default: break;
+    default: printf("error\n"); break;
     }
 
     wattron(win, COLOR_PAIR(color));
