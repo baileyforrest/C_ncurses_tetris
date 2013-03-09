@@ -24,9 +24,10 @@ int initInter()
     noecho();
     cbreak();
     start_color();
+    curs_set(0); // hide the cursor
 
     startx = (COLS - (B_WIDTH + 2)) / 2;
-    starty = (LINES - (B_HEIGHT - B_HIDDEN + 2)) / 2;
+    starty = (LINES - (B_HEIGHT + 2)) / 2;
 
     init_pair(RED, COLOR_RED, COLOR_BLACK);
     init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
@@ -36,13 +37,14 @@ int initInter()
     init_pair(CYAN, COLOR_CYAN, COLOR_BLACK);
     init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
     
-    tetris_win = newwin(B_HEIGHT - B_HIDDEN + 2, B_WIDTH + 2,
-                        starty, startx);
+    tetris_win = newwin(B_HEIGHT, B_WIDTH, starty, startx);
     keypad(tetris_win, TRUE);
     box(tetris_win, 0, 0);
     keypad(stdscr, TRUE);
     wrefresh(tetris_win);
-    mvprintw(0, 0, "Tetris! Left/Right/Down arrow keys to move, Up to flip. "
+    mvprintw(0, 0, "Tetris! \n"
+             "Left/Right/Down arrow keys\n"
+             "to move, Up to flip.\n"
              "Space bar to hard drop");
 
     return 0;
@@ -79,12 +81,17 @@ void displayBoard(board *mainBoard, piece *fallingPiece, piece *nextPiece)
 {
     bRow *r;
     int x, y = 0;
+    //r = mainBoard->top;
+
+    /*
+    // Don't display the hidden rows
+    int i;
+    for(i = 0; i < B_HIDDEN; i++)
+        r = r->prev;
+    */
+
     for(r = mainBoard->top; r != NULL; r = r->prev, y++)
     {
-        //printf("%d %d\n", x, y);
-        if(y < 2)
-            continue;
-
         for(x = 0; x < B_WIDTH; x++)
         {
             dispBlock(x, y, r->blocks[x], tetris_win);
@@ -151,8 +158,7 @@ void displayFallingPiece(piece *fallingPiece)
     int blockx = fallingPiece->x;
     int blocky = fallingPiece->y;
 
-    if(blocky > PHEIGHT / 2)
-        displayPiece(blockx, blocky, fallingPiece, tetris_win, false);
+    displayPiece(blockx, blocky, fallingPiece, tetris_win, false);
 }
 
 void displayNextPiece(piece *nextPiece)
@@ -163,4 +169,9 @@ void displayNextPiece(piece *nextPiece)
     mvprintw(nexty, nextx, "Next:");
     
     displayPiece(nextx, nexty + 1, nextPiece, stdscr, true);
+}
+
+void dispGameOver()
+{
+    mvprintw(10, 0, "Game Over!");
 }

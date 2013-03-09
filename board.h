@@ -13,8 +13,8 @@
 #include <stdlib.h>
 
 #define B_WIDTH 10
-#define B_HEIGHT 24
-#define B_HIDDEN 2
+#define B_HEIGHT 22
+//#define B_HIDDEN 2
 
 typedef unsigned char block;
 

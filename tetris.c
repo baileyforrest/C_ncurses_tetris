@@ -15,6 +15,7 @@ static piece *fallingPiece = NULL;
 static piece *nextPiece = NULL;
 static int score;
 static int lines;
+static bool gameOver;
 
 int main()
 {
@@ -34,6 +35,7 @@ int initGame()
 {
     score = 0;
     lines = 0;
+    gameOver = false;
 
     if(mainBoard != NULL)
         freeBoard(mainBoard);
@@ -79,6 +81,11 @@ int runGame()
             return 1;
         displayBoard(mainBoard, fallingPiece, nextPiece);
         displayStats(score, lines);
+        if(gameOver)
+        {
+            dispGameOver();
+            return 1;
+        }
     }
     
     return 0;
@@ -97,8 +104,12 @@ bool moveDown(piece *p)
     {
         setPiece(fallingPiece);
         freePiece(fallingPiece);
-        lines += removeEmptyRows(mainBoard);
+        int removed = removeEmptyRows(mainBoard);
+        lines += removed;
+        score += removed * removed;
         getNextPiece();
+        if(!validLocation(fallingPiece))
+            gameOver = true;
         return false;
     }
 

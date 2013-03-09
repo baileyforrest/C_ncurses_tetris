@@ -35,5 +35,6 @@ void dispBlock(int x, int y, block b, WINDOW *win);
 void displayPiece(int initx, int inity, piece *p, WINDOW *win, bool ovr);
 void displayFallingPiece(piece *fallingPiece);
 void displayNextPiece(piece *nextPiece);
+void dispGameOver();
 
 #endif

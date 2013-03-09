@@ -70,10 +70,6 @@ bool movePiece(piece *p, int dir)
     // Moving down
     if(!dir)
     {
-/*
-        if(!p->cRow->prev) // Reached the bottom
-            return false;
-*/
         p->y++;
         p->cRow = p->cRow->prev;
     }
@@ -133,6 +129,17 @@ void rotate(block blocks[PHEIGHT][PHEIGHT])
     memcpy(blocks, temp, sizeof(block) * PHEIGHT * PHEIGHT);
 }
 
+inline void flipZ(block blocks[PHEIGHT][PHEIGHT])
+{
+    swap(&blocks[0][0], &blocks[1][0]);
+    swap(&blocks[1][2], &blocks[2][0]);
+}
+
+inline void flipS(block blocks[PHEIGHT][PHEIGHT])
+{
+    swap(&blocks[0][2], &blocks[1][2]);
+    swap(&blocks[1][0], &blocks[2][2]);
+}
 
 
 // Rotates a piece clockwise.  Returns false if rotation could not be completed
@@ -145,9 +152,9 @@ bool rotatePiece(piece *p)
     switch(p->t)
     {
     case O: break; // Do nothing for O pieces
-    case I:
-    case S:
-    case Z: trans(testPiece->blocks); break;
+    case I: trans(testPiece->blocks); break;
+    case S: flipS(testPiece->blocks); break;
+    case Z: flipZ(testPiece->blocks); break;
         
     case J:
     case L:
