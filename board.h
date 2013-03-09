@@ -35,7 +35,7 @@ bRow *createBRow();
 board *createBoard();
 void freeBoard(board *board);
 bRow *getBrow(board *board, int rowN);
-void removeRow(bRow *row);
+void removeRow(board* board, bRow *row);
 bool rowFull(bRow *row);
 int removeEmptyRows(board *board);
 

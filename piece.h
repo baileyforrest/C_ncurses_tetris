@@ -49,7 +49,7 @@ typedef struct piece
 
     block blocks[PHEIGHT][PHEIGHT]; // 4x4 grid of blocks
     pieceType t;
-    bRow* cRow; // Points to lowest row piece is in
+    bRow* cRow; // Points to highest row piece is in
 } piece;
 
 void setPiece(piece *p);

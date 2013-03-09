@@ -62,10 +62,23 @@ inline bRow *getBrow(board *board, int rowN)
 }
 
 // Remove row, Responsibility of calling function to put new rows at top
-void removeRow(bRow *row)
+void removeRow(board* board, bRow *row)
 {
-    row->prev->next = row->next;
-    row->next->prev = row->prev;
+    if(row == board->bottom)
+    {
+        board->bottom = board->bottom->next;
+        board->bottom->prev = NULL;
+    }
+    else if(row == board->top)
+    {
+        board->top = board->top->prev;
+        board->top->next = NULL;
+    }
+    else
+    {
+        row->prev->next = row->next;
+        row->next->prev = row->prev;
+    }
 
     free(row);
 }
@@ -92,7 +105,7 @@ int removeEmptyRows(board* board)
         next = row->next;
         if(rowFull(row))
         {
-            removeRow(row);
+            removeRow(board, row);
             removed++;
         }
         row = next;

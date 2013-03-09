@@ -21,12 +21,12 @@ void setPiece(piece *p)
     {
         for(i = 0; i < PHEIGHT; i++)
         {
-            b = p->blocks[PHEIGHT - 1 - row][i];
+            b = p->blocks[row][i];
             if(b)
                 r->blocks[p->x + i] = b;
         }
-
-        r = r->next;
+        if(r)
+            r = r->prev;
     }
 }
 
@@ -34,14 +34,18 @@ void setPiece(piece *p)
 bool validLocation(piece *p)
 {
     int row = 0, col = 0;
-    bRow*  rp = p->cRow;
+    bRow* rp = p->cRow;
     for(row = 0; row < PHEIGHT; row++)
     {
         for(col = 0; col < PHEIGHT; col++)
         {
             // If there's a block here
-            if(p->blocks[PHEIGHT - row - 1][col])
+            if(p->blocks[row][col])
             {
+                // Block off the board
+                if(rp == NULL)
+                    return false;
+
                 // Check if block out of bounds
                 if((p->y + row < 0) || (p->x + col < 0) ||
                    (p->x + col >= B_WIDTH))
@@ -52,7 +56,8 @@ bool validLocation(piece *p)
                     return false;
             }
         }
-        rp = rp->next;
+        if(rp)
+            rp = rp->prev;
     }
 
     return true;
@@ -65,8 +70,10 @@ bool movePiece(piece *p, int dir)
     // Moving down
     if(!dir)
     {
+/*
         if(!p->cRow->prev) // Reached the bottom
             return false;
+*/
         p->y++;
         p->cRow = p->cRow->prev;
     }
@@ -244,10 +251,6 @@ piece *newPiece(board *b)
     p->t = t;
 
     bRow *r = b->top;
-    int rIdx;
-    for(rIdx = 0; rIdx < PHEIGHT - 1; rIdx++)
-        r = r->prev;
-
     p->cRow = r;
 
     switch(t)
